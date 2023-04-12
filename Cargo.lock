@@ -1060,6 +1060,7 @@ dependencies = [
  "nu-plugin",
  "nu-protocol",
  "num-bigint",
+ "num-rational",
  "num-traits",
  "parquet",
 ]
