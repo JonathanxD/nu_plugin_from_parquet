@@ -77,19 +77,22 @@ fn convert_to_nu(field: &Field, span: Span) -> Value {
                 }),
             })
         }
-        Field::Group(_row) => {
-            unimplemented!("Nested structs not supported yet")
+        Field::Group(row) => {
+            convert_parquet_row(row, span)
         }
-        Field::ListInternal(_list) => {
-            unimplemented!("Lists not supported yet")
+        Field::ListInternal(list) => {
+            Value::list(list.elements().iter().map(|v| convert_to_nu(&v, span)).collect(), span)
         }
-        Field::MapInternal(_map) => {
-            unimplemented!("Maps not supported yet")
+        Field::MapInternal(map) => {
+            Value::list(map.entries()
+                .iter()
+                .map(|(k, v)| Value::list(vec![convert_to_nu(k, span), convert_to_nu(v, span)], span))
+                .collect::<Vec<_>>(), span)
         }
     }
 }
 
-fn convert_parquet_row(row: Row, span: Span) -> Value {
+fn convert_parquet_row(row: &Row, span: Span) -> Value {
     let mut cols = vec![];
     let mut vals = vec![];
     for (name, field) in row.get_column_iter() {
@@ -105,7 +108,7 @@ pub fn from_parquet_bytes(bytes: Vec<u8>, span: Span) -> Value {
     let mut iter = reader.get_row_iter(None).unwrap();
     let mut vals = Vec::new();
     while let Some(record) = iter.next() {
-        let row = convert_parquet_row(record, span);
+        let row = convert_parquet_row(&record, span);
         vals.push(row);
     }
     Value::List { vals, span }
