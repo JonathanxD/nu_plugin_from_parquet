@@ -14,6 +14,9 @@ nu-plugin = "0.78"
 nu-protocol = "0.78"
 parquet = "37.0.0"
 bytes = "1.4.0"
+num-bigint = "0.4.3"
+num-traits = "0.2.15"
+bigdecimal = "0.3.0"
 
 [dependencies.chrono]
 version = "0.4.24"
