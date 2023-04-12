@@ -1,7 +1,7 @@
 mod from_parquet;
 
 use nu_plugin::{serve_plugin, Plugin, JsonSerializer, EvaluatedCall, LabeledError};
-use nu_protocol::{Signature, Value};
+use nu_protocol::{Value, PluginSignature};
 
 struct FromParquet;
 
@@ -12,9 +12,9 @@ impl FromParquet {
 }
 
 impl Plugin for FromParquet {
-    fn signature(&self) -> Vec<Signature> {
+    fn signature(&self) -> Vec<PluginSignature> {
         vec![
-            Signature::build("from parquet")
+            PluginSignature::build("from parquet")
             .usage("Convert from .parquet binary into table")
             .filter()
         ]

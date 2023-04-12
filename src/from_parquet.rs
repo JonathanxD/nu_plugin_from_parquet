@@ -24,7 +24,7 @@ fn convert_to_nu(field: &Field, span: Span) -> Value {
         Field::ULong(l) => {
             (*l).try_into()
                 .map(|l| Value::int(l, span))
-                .unwrap_or_else(|e| Value::Error { error: ShellError::CantConvert("i64".into(), "u64".into(), span, Some(e.to_string())) })
+                .unwrap_or_else(|e| Value::Error { error: Box::new(ShellError::CantConvert{ to_type: "i64".into(), from_type: "u64".into(), span, help: Some(e.to_string()) }) })
         }
         Field::Float(f) => Value::float((*f).into(), span),
         Field::Double(f) => Value::float(*f, span),
